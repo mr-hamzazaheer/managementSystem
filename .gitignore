@@ -52,3 +52,124 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+## Ignore build results
+bin/
+obj/
+out/
+
+## Ignore user-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+## VS Code settings
+.vscode/
+.vscode/*
+
+## Rider settings
+.idea/
+
+## Build results
+*.dll
+*.exe
+*.app
+*.log
+*.pdb
+*.cache
+*.dbmdl
+
+## .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Ignore .NET Core global tools restore cache
+.dotnet_tool/
+tools/
+
+## NuGet
+*.nupkg
+*.snupkg
+*.nuspec
+*.psmdcp
+.nuget/
+packages/
+# Uncomment if you have to store NuGet packages in the repo
+#!packages/repositories.config
+
+## Entity Framework
+Migrations/
+*.sqlite
+*.db
+
+## Logs
+*.log
+logs/
+*.tlog
+
+## Coverage and test results
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+*.vsp
+*.vspx
+*.vspscc
+*.vsmdi
+*.psess
+
+## Temporary files
+*.tmp
+*.bak
+*.swp
+*.swn
+
+## OS-specific
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+.nfs*
+
+## Visual Studio
+.vs/
+*.ncb
+*.sdf
+*.opensdf
+*.suo
+*.cache
+*.dbmdl
+
+## DotCover
+.idea/.dotCover
+
+## Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## Local environment secrets
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+
+## Docker
+**/Dockerfile.*
+docker-compose.*
+.dockerignore
+
+## Other
+*.vsix
+*.ps1
+*.cmd
