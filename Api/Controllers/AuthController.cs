@@ -10,14 +10,12 @@ using Shared.DTO;
 public class AuthController : ControllerBase
 {
     private readonly UserManager<IdentityUser> _userManager; 
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IAuthService _authService;
 
-    public AuthController(UserManager<IdentityUser> userManager, IUnitOfWork unitOfWork,
+    public AuthController(UserManager<IdentityUser> userManager,
         IAuthService authService)
     {
-        _userManager = userManager; 
-        _unitOfWork = unitOfWork; _authService = authService;
+        _userManager = userManager; _authService = authService;
     }
 
     [HttpPost("login")]

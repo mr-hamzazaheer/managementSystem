@@ -6,7 +6,6 @@ using Services.UnitOfWork.IUnitOfWork;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _context;
-    private readonly Dictionary<Type, object> _repositories = new();
     public IRoleRepository _roleRepository { get; }
     public IUserRepository _userRepository { get; }
     public UnitOfWork(ApplicationDbContext context, IRoleRepository roleRepository,
