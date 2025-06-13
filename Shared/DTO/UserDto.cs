@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Shared.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Entities;
-public class AppUser
+namespace Shared.DTO;
+public class UserDto : BaseDto
 {
     public string? FirstName { get; set; }
     public string? LasttName { get; set; }
