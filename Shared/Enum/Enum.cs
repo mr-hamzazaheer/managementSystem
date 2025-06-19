@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
 
 namespace Shared.Enums;
@@ -92,6 +93,9 @@ public enum ActivityAction
     AccessDenied = 50,
 
     [Display(Name = "Token Refreshed")]
-    TokenRefreshed = 51
+    TokenRefreshed = 51,
+
+    [Display(Name = "Register")]
+    Register = 51
 }
 

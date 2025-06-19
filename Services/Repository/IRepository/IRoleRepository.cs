@@ -9,6 +9,8 @@ namespace Services.Repository.IRepository
 {
     public interface IRoleRepository
     {
-        Task  GetAll();
+        Task<List<ApplicationRole>> GetAllAsync();
+
+        //Task<ApplicationRole> AddAsync(ApplicationRole role);
     }
 }

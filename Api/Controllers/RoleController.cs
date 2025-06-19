@@ -26,4 +26,12 @@ public class RoleController : ControllerBase
     [HttpGet("get-all")]
     public async Task<Response> GetAll() =>
         await _roleService.GetAll();
+
+    [HttpPost]
+    public async Task<Response> Create([FromBody] ApplicationRole role) =>
+        await _roleService.CreateAsync(role);
+
+    [HttpPut("{id}")]
+    public async Task<Response> Update(string id, [FromBody] ApplicationRole updatedRole)=>
+        await _roleService.UpdateAsync(id, updatedRole);
 }

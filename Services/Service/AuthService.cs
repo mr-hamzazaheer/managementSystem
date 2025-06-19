@@ -50,7 +50,7 @@ public class AuthService : IAuthService
         _response.Message = Message.Success; 
         await _unitOfWork._activityLog.LogAsync(
             action: ActivityAction.Login,
-            entityName: "Customer",
+            entityName: typeof(User).Name,
             entityId: user.Id,
             requestData: userInfo,
             responseData: user
@@ -73,13 +73,21 @@ public class AuthService : IAuthService
         {
             _response.Message = Message.Success;
         }
+        var newUser = await _userManager.FindByEmailAsync(dto.Email);
         await _unitOfWork._userRepository.AddUserAsync(new UserDto
         {
             FirstName = dto.FirstName,
             LastName = dto.LastName,
             ContactNumber = dto.ContactNo,
-            AspnetUserId = user.Id
+            AspnetUserId = newUser.Id
         });
+        await _unitOfWork._activityLog.LogAsync(
+            action: ActivityAction.Register,
+            entityName: typeof(User).Name,
+            entityId: newUser.Id,
+            requestData: existingUser,
+            responseData: user
+        );
         await _unitOfWork.SaveChangesAsync();
         _response.Message = Message.Success;
         return _response;

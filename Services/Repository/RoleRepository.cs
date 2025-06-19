@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Services.Repository.IRepository;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,10 +20,25 @@ namespace Services.Repository
             Console.WriteLine($"GenericRepository DbContext Hash: {_context.GetHashCode()}");
         }
 
-        public Task GetAll()
+        public async Task<List<ApplicationRole>> GetAllAsync()
         {
-            // Implementation to get customer by ID
-            throw new NotImplementedException();
+            return await _context.Roles.Where(r=> r.IsDisplay == true).AsNoTracking().ToListAsync();
         }
+        //public async Task<ApplicationRole> AddAsync(ApplicationRole role)
+        //{
+        //    ApplicationRole newRole = new()
+        //    {
+        //        Name = role.Name,
+        //        NormalizedName = role.NormalizedName,
+        //        GroupEmail = role.GroupEmail,
+        //        IsDisplay = role.IsDisplay,
+        //        IsAccess = role.IsAccess,
+        //        IsDelete = role.IsDelete,
+        //        IsDeleteAllow = role.IsDeleteAllow
+        //    };
+
+        //    _context.Roles.Add(role);
+        //    return newRole;
+        //}
     }
 }
