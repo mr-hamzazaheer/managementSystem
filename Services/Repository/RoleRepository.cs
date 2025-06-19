@@ -17,28 +17,8 @@ namespace Services.Repository
         public RoleRepository(ApplicationDbContext context)
         {
             _context = context;
-            Console.WriteLine($"GenericRepository DbContext Hash: {_context.GetHashCode()}");
+            //Console.WriteLine($"GenericRepository DbContext Hash: {_context.GetHashCode()}");
         }
 
-        public async Task<List<ApplicationRole>> GetAllAsync()
-        {
-            return await _context.Roles.Where(r=> r.IsDisplay == true).AsNoTracking().ToListAsync();
-        }
-        //public async Task<ApplicationRole> AddAsync(ApplicationRole role)
-        //{
-        //    ApplicationRole newRole = new()
-        //    {
-        //        Name = role.Name,
-        //        NormalizedName = role.NormalizedName,
-        //        GroupEmail = role.GroupEmail,
-        //        IsDisplay = role.IsDisplay,
-        //        IsAccess = role.IsAccess,
-        //        IsDelete = role.IsDelete,
-        //        IsDeleteAllow = role.IsDeleteAllow
-        //    };
-
-        //    _context.Roles.Add(role);
-        //    return newRole;
-        //}
     }
 }

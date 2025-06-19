@@ -6,6 +6,7 @@ using Services.Logger.ILogger;
 using Services.Service.IService;
 using Services.UnitOfWork.IUnitOfWork;
 using Shared.Common;
+using Shared.Enums;
 
 namespace Services.Service;
 public class RoleService : IRoleService
@@ -25,10 +26,21 @@ public class RoleService : IRoleService
         _response = new(); _jwt = options.Value;
         _roleManager = roleManager;
     }
-
-    public async Task<Response> GetAll()
+    public async Task<Response> GetAllAsync()
     {
-         await _unitOfWork._roleRepository.GetAllAsync();
+        var roles = _roleManager.Roles
+            .Where(r => r.IsDisplay)
+            .AsNoTracking()
+            .ToList();
+        return _response;
+    } 
+    public async Task<Response> GetById(string id)
+    {
+        var role = await _roleManager.FindByIdAsync(id);
+
+        if (role == null)
+            _response.HttpCode = System.Net.HttpStatusCode.BadRequest; _response.Message = Message.NotFound;
+        _response.Message = Message.Success;
         return _response;
     }
     public async Task<Response> CreateAsync(ApplicationRole role)
@@ -77,6 +89,25 @@ public class RoleService : IRoleService
             _response.Message = Message.Error; _response.HttpCode = System.Net.HttpStatusCode.BadRequest; // 404
 
         _response.Message = Message.Success;
+        await _unitOfWork._activityLog.LogAsync(
+           action: ActivityAction.Update,
+           entityName: typeof(ApplicationRole).Name,
+           entityId: role.Id,
+           requestData: updatedRole,
+           responseData: role
+       );
+        await _unitOfWork.SaveChangesAsync();
+        return _response;
+    }
+    public async Task<Response> DeleteAsync(string id)
+    {
+        var role = await _roleManager.FindByIdAsync(id);
+        if (role == null)
+            _response.Message = Message.NotFound; _response.HttpCode = System.Net.HttpStatusCode.BadRequest;
+        var result = await _roleManager.DeleteAsync(role);
+        if (!result.Succeeded)
+            _response.Message = Message.Error; _response.HttpCode = System.Net.HttpStatusCode.BadRequest;
+
         return _response;
     }
 }

@@ -8,9 +8,6 @@ using System.Threading.Tasks;
 namespace Services.Repository.IRepository
 {
     public interface IRoleRepository
-    {
-        Task<List<ApplicationRole>> GetAllAsync();
-
-        //Task<ApplicationRole> AddAsync(ApplicationRole role);
+    { 
     }
 }

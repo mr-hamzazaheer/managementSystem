@@ -25,7 +25,10 @@ public class RoleController : ControllerBase
 
     [HttpGet("get-all")]
     public async Task<Response> GetAll() =>
-        await _roleService.GetAll();
+        await _roleService.GetAllAsync();
+    [HttpGet("{id}")]
+    public async Task<Response> GetById(string id) =>
+        await _roleService.GetById(id);
 
     [HttpPost]
     public async Task<Response> Create([FromBody] ApplicationRole role) =>
@@ -34,4 +37,7 @@ public class RoleController : ControllerBase
     [HttpPut("{id}")]
     public async Task<Response> Update(string id, [FromBody] ApplicationRole updatedRole)=>
         await _roleService.UpdateAsync(id, updatedRole);
+    [HttpDelete("{id}")]
+    public async Task<Response> DeleteAsync(string id)=>
+        await _roleService.DeleteAsync(id);
 }
