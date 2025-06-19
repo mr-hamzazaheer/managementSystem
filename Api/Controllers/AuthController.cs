@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Services.Service.IService;
 using Services.UnitOfWork.IUnitOfWork;
@@ -19,6 +20,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
+    //[Authorize]
     public async Task<Response> Login([FromBody] LoginDto dto)=>
        await _authService.LoginAsync(dto);
 

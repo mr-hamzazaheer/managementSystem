@@ -1,10 +1,11 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Shared.Common;
-using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text;
+using System;
 
 namespace Shared.Extensions
 {
@@ -32,6 +33,14 @@ namespace Shared.Extensions
                 signingCredentials: credentials
             );
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+        public static string GetEnumDisplayName(this Enum enumValue)
+        {
+            var attribute = enumValue.GetType().GetMember(enumValue.ToString()).First().GetCustomAttribute<DisplayAttribute>();
+            if (ReferenceEquals(attribute, null))
+                return enumValue.ToString();
+            else
+                return attribute.GetName();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Infrastructure;
-using Infrastructure.Entities;
-using Services.Repository;
+using Services.Logger.ILogger;
 using Services.Repository.IRepository;
 using Services.UnitOfWork.IUnitOfWork;
 public class UnitOfWork : IUnitOfWork
@@ -8,12 +7,14 @@ public class UnitOfWork : IUnitOfWork
     private readonly ApplicationDbContext _context;
     public IRoleRepository _roleRepository { get; }
     public IUserRepository _userRepository { get; }
+    public IActivityLogger _activityLog { get; }
     public UnitOfWork(ApplicationDbContext context, IRoleRepository roleRepository,
-        IUserRepository userRepository)
+        IUserRepository userRepository, IActivityLogger activityLog)
     {
         _context = context;
         _roleRepository = roleRepository;
         _userRepository = userRepository;
+        _activityLog = activityLog;
     }
 
     //public IGenericRepository<T> Repository<T>() where T : BaseEntity

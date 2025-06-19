@@ -14,6 +14,7 @@ using Services.Service.IService;
 using Services.Service;
 using Services.Repository.IRepository;
 using Shared.Common;
+using Serilog;
 
 namespace Api.ServiceExtensions;
 
@@ -21,38 +22,42 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection ConfigureServices(this IServiceCollection services, IConfiguration config)
     {
-
-        services.Configure<Jwt>(config.GetSection("JwtSettings"));
+    //Get App settings
+        services.Configure<Jwt>(config.GetSection("Jwt"));
         var jwtSettings = new Jwt();
-        config.GetSection("JwtSettings").Bind(jwtSettings);
+        config.GetSection("Jwt").Bind(jwtSettings);
         services.AddSingleton(jwtSettings);
+    //Conection String
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
+    //Identity Setup
         services.RegisterRepositories(Assembly.GetAssembly(typeof(IRoleRepository))!);
         services.AddIdentity<IdentityUser, ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-
-
-        //// JWT Auth
-        //var jwtSettings = config.GetSection("Jwt");
-        //var secret = jwtSettings["Key"];
-
-        //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        //    .AddJwtBearer(opts =>
-        //    {
-        //        opts.TokenValidationParameters = new TokenValidationParameters
-        //        {
-        //            ValidateIssuer = true,
-        //            ValidIssuer = jwtSettings["Issuer"],
-        //            ValidateAudience = true,
-        //            ValidAudience = jwtSettings["Audience"],
-        //            ValidateLifetime = true,
-        //            ValidateIssuerSigningKey = true,
-        //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret))
-        //        };
-        //    });
-
-        // Add Swagger with JWT support
+    //Loging 
+        Log.Logger = new LoggerConfiguration()
+        .ReadFrom.Configuration(config).MinimumLevel.Error()
+        .WriteTo.File(
+            "logs/app-log-.txt",rollingInterval: RollingInterval.Day,
+            retainedFileCountLimit: 30, // 👈 keep last 30 days of logs, older files auto-deleted
+            outputTemplate:"{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+        .Enrich.FromLogContext().CreateLogger();
+        // JWT Auth
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(opts =>
+            {
+                opts.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidateAudience = true,
+                    ValidAudience = jwtSettings.Audience,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
+                };
+            });
+        //Add Swagger with JWT support
         services.AddSwaggerDocumentation(); 
         return services;
     }
