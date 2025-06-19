@@ -151,11 +151,11 @@ namespace Infrastructure.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("LastUpdatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("LasttName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

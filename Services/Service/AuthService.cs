@@ -73,6 +73,14 @@ public class AuthService : IAuthService
         {
             _response.Message = Message.Success;
         }
+        await _unitOfWork._userRepository.AddUserAsync(new UserDto
+        {
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            ContactNumber = dto.ContactNo,
+            AspnetUserId = user.Id
+        });
+        await _unitOfWork.SaveChangesAsync();
         _response.Message = Message.Success;
         return _response;
     }
