@@ -1,12 +1,8 @@
 ﻿using Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Services.Service;
-using Services.Service.IService;
-using Services.UnitOfWork.IUnitOfWork;
-using Shared.Common;
-using Shared.DTO;
-using Shared.Generic;
+using Microsoft.AspNetCore.Mvc; 
+using Services.Service.IService; 
+using Shared.Common; 
 
 [ApiController]
 [Route("api/[controller]")]

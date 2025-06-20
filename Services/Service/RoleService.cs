@@ -69,6 +69,14 @@ public class RoleService : IRoleService
         }
         else
             _response.Message = Message.Success;
+        await _unitOfWork._activityLog.LogAsync(
+          action: ActivityAction.Create,
+          entityName: typeof(ApplicationRole).Name,
+          entityId: role.Id,
+          requestData: newRole,
+          responseData: role
+      );
+        await _unitOfWork.SaveChangesAsync();
         return _response;
     }
     public async Task<Response> UpdateAsync(string id,ApplicationRole updatedRole)
@@ -107,7 +115,15 @@ public class RoleService : IRoleService
         var result = await _roleManager.DeleteAsync(role);
         if (!result.Succeeded)
             _response.Message = Message.Error; _response.HttpCode = System.Net.HttpStatusCode.BadRequest;
-
+        _response.Message = Message.Success;
+        await _unitOfWork._activityLog.LogAsync(
+           action: ActivityAction.Delete,
+           entityName: typeof(ApplicationRole).Name,
+           entityId: role.Id,
+           requestData: role,
+           responseData: role
+       );
+        await _unitOfWork.SaveChangesAsync();
         return _response;
     }
 }
