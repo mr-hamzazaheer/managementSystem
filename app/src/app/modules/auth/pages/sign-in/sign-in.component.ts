@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Router, RouterLink } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { AuthService } from '../../services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-sign-in',
@@ -16,7 +18,8 @@ export class SignInComponent implements OnInit {
   submitted = false;
   passwordTextType!: boolean;
 
-  constructor(private readonly _formBuilder: FormBuilder, private readonly _router: Router) {}
+  constructor(private readonly _formBuilder: FormBuilder, private readonly _router: Router,
+    private _authService:AuthService,private _toastr: ToastrService) {}
 
   onClick() {
     console.log('Button clicked');
@@ -38,13 +41,35 @@ export class SignInComponent implements OnInit {
   }
 
   onSubmit() {
+    debugger
     this.submitted = true;
     const { email, password } = this.form.value;
 
     if (this.form.invalid) {
       return;
-    }
+    }else{
+          this._authService.Login({ email, password }).subscribe({
+            next: (response) => {
+              this._toastr.success( 'Success');
 
-    this._router.navigate(['/']);
+              // Store token if present
+              if (response) {
+               // localStorage.setItem('token', response.token);
+              this._router.navigate(['/']);
+              } else {
+              this._toastr.warning( 'warning');
+              } 
+            },
+            error: (error) => {
+              this._toastr.error( 'error');
+
+              // TODO: Display user-friendly error message (e.g., incorrect credentials)
+             // this.errorMessage = 'Invalid email or password.';
+            }
+          });
+
+          console.log('Form submitted:', this.form.value);
+
+    }
   }
 }

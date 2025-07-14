@@ -31,6 +31,7 @@ public class AuthService : IAuthService
         if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
         {
             _response.Message = Message.LoginFaild;
+            _response.HttpCode = System.Net.HttpStatusCode.Unauthorized;
             return _response;
         }
         User userInfo = await _unitOfWork._userRepository.GetByIdOrAspNetUserIdAsync(0,user.Id);

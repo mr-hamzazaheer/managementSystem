@@ -1,11 +1,13 @@
 import { enableProdMode, importProvidersFrom } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { environment } from './environments/environment';
 import { AppComponent } from './app/app.component';
 import { AppRoutingModule } from './app/app-routing.module';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { httpInterceptor } from './app/core/interceptor/http.interceptor';
+import { provideToastr } from 'ngx-toastr';
 
 if (environment.production) {
   enableProdMode();
@@ -16,7 +18,16 @@ if (environment.production) {
 }
 
 bootstrapApplication(AppComponent, {
-  providers: [importProvidersFrom(BrowserModule, AppRoutingModule), provideAnimations()],
+  providers: [importProvidersFrom(BrowserModule, AppRoutingModule), provideAnimations(),
+    provideHttpClient(withInterceptors([httpInterceptor])),
+        provideToastr({
+      positionClass: 'toast-top-right', // You can change this
+      timeOut: 3000,
+      closeButton: true,
+      progressBar: true,
+    }),
+
+  ],
 }).catch((err) => console.error(err));
 
 function selfXSSWarning() {

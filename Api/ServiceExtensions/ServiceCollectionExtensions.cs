@@ -32,7 +32,17 @@ public static class ServiceCollectionExtensions
         services.RegisterRepositories(Assembly.GetAssembly(typeof(IRoleRepository))!);
         services.AddIdentity<IdentityUser, ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-    //Loging 
+    //Cors 
+        services.AddCors(options =>
+         {
+            options.AddPolicy("AllowAngularDev", policy =>{
+                policy.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+         });
+
+        //Loging 
         Log.Logger = new LoggerConfiguration()
         .ReadFrom.Configuration(config).MinimumLevel.Error()
         .WriteTo.File(
