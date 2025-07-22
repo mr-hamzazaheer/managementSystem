@@ -50,26 +50,18 @@ export class SignInComponent implements OnInit {
     }else{
           this._authService.Login({ email, password }).subscribe({
             next: (response) => {
-              this._toastr.success( 'Success');
-
-              // Store token if present
-              if (response) {
-               // localStorage.setItem('token', response.token);
-              this._router.navigate(['/']);
-              } else {
-              this._toastr.warning( 'warning');
-              } 
-            },
-            error: (error) => {
-              this._toastr.error( 'error');
-
-              // TODO: Display user-friendly error message (e.g., incorrect credentials)
-             // this.errorMessage = 'Invalid email or password.';
-            }
+                const { httpCode, data,message } = response as any;
+                if (httpCode === 200) {
+                  localStorage.setItem('token', data?.token);
+                  this._router.navigate(['/']);
+                  this._toastr.success( message);
+                }else if (httpCode === 401) {
+                  this._toastr.warning( message);
+                }else{
+                  this._toastr.error( message);
+                }
+              }
           });
-
-          console.log('Form submitted:', this.form.value);
-
     }
   }
 }

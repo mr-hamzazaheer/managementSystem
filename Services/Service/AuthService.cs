@@ -36,46 +36,45 @@ public class AuthService : IAuthService
     public async Task<Response> LoginAsync(LoginDto dto)
     {
         var user = await _userManager.FindByEmailAsync(dto.Email);
-        //await _emailSender.SendEmailAsync(
-        //    from: "hamza.zaheer.work@gmail.com",
-        //    to: dto.Email,
-        //    subject: "Login Attempt",
-        //    bodyHtml: $"<p>Login attempt with email: {dto.Email}</p>",
-        //    bodyHtml:  $"Please confirm your account by clicking this link: <a href='{confirmationLink}'>link</a>",
-        //    cc: null,
-        //    bcc: null,
-        //    attachments: null
-        //);
         if (user == null || !await _userManager.CheckPasswordAsync(user, dto.Password))
         {
             _response.Message = Message.LoginFaild;
             _response.HttpCode = System.Net.HttpStatusCode.Unauthorized;
             return _response;
         }
-        User userInfo = await _unitOfWork._userRepository.GetByIdOrAspNetUserIdAsync(0,user.Id);
-        var claims = new List<Claim>
+        if (user.EmailConfirmed)
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim("UserName", userInfo.FirstName)
-        };
-        var token = _jwt.GenerateToken(claims, isRemember: dto.IsRemember);
-        _response.Data = new
+            User userInfo = await _unitOfWork._userRepository.GetByIdOrAspNetUserIdAsync(0, user.Id);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("UserName", userInfo.FirstName)
+            };
+            var token = _jwt.GenerateToken(claims, isRemember: dto.IsRemember);
+            _response.Data = new
+            {
+                Token = token,
+                UserId = user.Id,
+                Email = user.Email
+            };
+            _response.Message = Message.Success;
+            await _unitOfWork._activityLog.LogAsync(
+                action: ActivityAction.Login,
+                entityName: typeof(User).Name,
+                entityId: user.Id,
+                requestData: userInfo,
+                responseData: user
+            );
+            await _unitOfWork.SaveChangesAsync();
+        }
+        else
         {
-            Token = token,
-            UserId = user.Id,
-            Email = user.Email
-        };
-        _response.Message = Message.Success; 
-        await _unitOfWork._activityLog.LogAsync(
-            action: ActivityAction.Login,
-            entityName: typeof(User).Name,
-            entityId: user.Id,
-            requestData: userInfo,
-            responseData: user
-        );
-        await _unitOfWork.SaveChangesAsync();
-        return _response;
+            _response.Message = Message.EmailNotConformed;
+            _response.HttpCode = System.Net.HttpStatusCode.Unauthorized;
+            return _response;
+        }
+            return _response;
     }
     public async Task<Response> RegisterAsync(RegisterRequestDto dto)
     {
@@ -94,7 +93,7 @@ public class AuthService : IAuthService
         }
         var newUser = await _userManager.FindByEmailAsync(dto.Email);
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        var request = _httpContextAccessor.HttpContext?.Request;
+        var request = _httpContextAccessor?.HttpContext?.Request;
         var scheme = request?.Scheme ?? "https"; // fallback to https
         var host = request?.Host.Value ?? "localhost:7165"; // fallback host
 

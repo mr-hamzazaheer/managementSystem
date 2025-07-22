@@ -9,6 +9,7 @@ namespace Shared.Common
     public static class Message
     {
         public static string LoginFaild = "Login failed. Incorrect username or password.";
+        public static string EmailNotConformed = "Login failed. Please confirm your email address before signing in.";
         public static string Success = "Your request was processed successfully.";
         public static string UpdateSuccessfully = "Changes saved successfully.";
         public static string SubmitedSuccessfully = "Data submitted successfully.";
