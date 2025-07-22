@@ -121,7 +121,7 @@ public class AuthService : IAuthService
             bodyHtml: $"Please confirm your account by clicking this link: <a href='{url}'>Conform Account</a>",
             cc: null,
             bcc: null,
-            attachments: null
+            attachments: null 
         );
         _response.Message = Message.Success;
         return _response;
