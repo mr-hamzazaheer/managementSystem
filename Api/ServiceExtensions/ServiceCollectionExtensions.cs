@@ -13,6 +13,8 @@ using System.Reflection;
 using Services.Repository.IRepository;
 using Shared.Common;
 using Serilog;
+using Shared.Services;
+using Shared.Service.Interfaces;
 
 namespace Api.ServiceExtensions;
 
@@ -29,20 +31,27 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(config.GetConnectionString("DefaultConnection")));
     //Identity Setup
+
+        services.AddIdentity<IdentityUser, ApplicationRole>(options =>
+        {
+            options.SignIn.RequireConfirmedEmail = true;
+        })
+         .AddEntityFrameworkStores<ApplicationDbContext>()
+         .AddDefaultTokenProviders();
+        //dependencies injection
         services.RegisterRepositories(Assembly.GetAssembly(typeof(IRoleRepository))!);
-        services.AddIdentity<IdentityUser, ApplicationRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
     //Cors 
         services.AddCors(options =>
-         {
+            {
             options.AddPolicy("AllowAngularDev", policy =>{
                 policy.WithOrigins("http://localhost:4200")
                     .AllowAnyHeader()
                     .AllowAnyMethod();
             });
-         });
+            });
 
-        //Loging 
+    //Loging 
         Log.Logger = new LoggerConfiguration()
         .ReadFrom.Configuration(config).MinimumLevel.Error()
         .WriteTo.File(
@@ -50,7 +59,7 @@ public static class ServiceCollectionExtensions
             retainedFileCountLimit: 30, // 👈 keep last 30 days of logs, older files auto-deleted
             outputTemplate:"{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
         .Enrich.FromLogContext().CreateLogger();
-        // JWT Auth
+    // JWT Auth
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(opts =>
             {
@@ -65,7 +74,7 @@ public static class ServiceCollectionExtensions
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey))
                 };
             });
-        //Add Swagger with JWT support
+    //Add Swagger with JWT support
         services.AddSwaggerDocumentation(); 
         return services;
     }
@@ -135,6 +144,16 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IActivityLogger, ActivityLogger>();
+        services.AddScoped<IEmailSenderService, SendEmail>();
         //services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
     }
 }
+//public static class AppConfig
+//{
+//    public static Settings settings { get; private set; } = default!;
+
+//    public static void Initialize(IConfiguration configuration)
+//    {
+//        settings = configuration.GetSection("Settings").Get<Settings>() ?? throw new Exception("SmtpSettings section is missing or invalid.");
+//    }
+//}

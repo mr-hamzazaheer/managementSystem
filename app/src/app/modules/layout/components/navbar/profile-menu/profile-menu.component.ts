@@ -92,6 +92,9 @@ export class ProfileMenuComponent implements OnInit {
 
   ngOnInit(): void {}
 
+  removeSpaces(title: string): string {
+    return title.replace(/\s+/g, '');
+  }
   public toggleMenu(): void {
     this.isOpen = !this.isOpen;
   }
@@ -113,5 +116,10 @@ export class ProfileMenuComponent implements OnInit {
     this.themeService.theme.update((theme) => {
       return { ...theme, direction: value };
     });
+  }
+  Logout() {
+    // Implement logout logic here, e.g., clear user session, redirect to login page, etc.
+    console.log('User logged out');
+    localStorage.clear();
   }
 }

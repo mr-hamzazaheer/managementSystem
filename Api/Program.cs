@@ -1,5 +1,7 @@
 using Api.Middleware;
 using Api.ServiceExtensions;
+using Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Serilog;
 using System.Reflection;
 

@@ -4,8 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
 using System.Security.Claims;
-using System.Text;
-using System;
+using System.Text; 
+using System.IO.Compression;
 
 namespace Shared.Extensions
 {
@@ -42,5 +42,52 @@ namespace Shared.Extensions
             else
                 return attribute.GetName();
         }
+        public static string Encode(this object input)
+        {
+            if (input == null) return string.Empty;
+
+            var text = input.ToString();
+            if (string.IsNullOrWhiteSpace(text)) return string.Empty;
+
+            var raw = Encoding.UTF8.GetBytes(text);
+            using var output = new MemoryStream();
+            using (var gzip = new GZipStream(output, CompressionMode.Compress))
+                gzip.Write(raw, 0, raw.Length);
+
+            var compressed = output.ToArray();
+            var lengthPrefix = BitConverter.GetBytes(raw.Length);
+
+            var finalData = new byte[compressed.Length + 4];
+            Buffer.BlockCopy(lengthPrefix, 0, finalData, 0, 4);
+            Buffer.BlockCopy(compressed, 0, finalData, 4, compressed.Length);
+
+            return Convert.ToBase64String(finalData)
+                .Replace("+", "_@_")
+                .Replace("=", "_@@_")
+                .Replace("&", "_endo_")
+                .Replace("/", "_~_");
+        }
+
+        public static string Decode(this string encoded)
+        {
+            if (string.IsNullOrWhiteSpace(encoded)) return string.Empty;
+
+            var base64 = encoded
+                .Replace("_@_", "+")
+                .Replace("_@@_", "=")
+                .Replace("_endo_", "&")
+                .Replace("_~_", "/");
+
+            var allData = Convert.FromBase64String(base64);
+            var length = BitConverter.ToInt32(allData, 0);
+
+            using var input = new MemoryStream(allData, 4, allData.Length - 4);
+            using var gzip = new GZipStream(input, CompressionMode.Decompress);
+            var buffer = new byte[length];
+            gzip.Read(buffer, 0, buffer.Length);
+
+            return Encoding.UTF8.GetString(buffer);
+        }
+
     }
 }

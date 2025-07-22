@@ -14,5 +14,17 @@ namespace Shared.Common
     }
     public class Settings
     {
+        public SMTP SMTPSettings { get; set; }
+    }
+    public sealed record SMTP
+    {
+        public string Host { get; init; } = default!;
+        public int Port { get; init; }
+        public bool UseStartTls { get; init; }
+        public string Username { get; init; } = default!;
+        public string Password { get; init; } = default!;
+        public string DisplayName { get; init; } = default!;
+        public bool EnableSsl { get; init; } = true;
+        public string DefaultSender { get; init; } = default!;
     }
 }

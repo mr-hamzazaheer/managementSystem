@@ -27,4 +27,7 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<Response> Register([FromBody] RegisterRequestDto dto) =>
        await _authService.RegisterAsync(dto);
+    [HttpGet("ConfirmEmail")]
+    public async Task<Response> ConfirmEmail(string userId, string token)=>
+        await _authService.ConfirmEmail(userId, token);
 }
