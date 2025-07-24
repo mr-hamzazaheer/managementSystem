@@ -1,34 +1,21 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, computed, OnInit, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, computed, signal } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { toast } from 'ngx-sonner';
+import { TableFilterService } from './table-filter.service';
 import { dummyData } from 'src/app/shared/dummy/user.dummy';
-import { TableActionComponent } from './components/table-action/table-action.component';
-import { TableFooterComponent } from './components/table-footer/table-footer.component';
-import { TableHeaderComponent } from './components/table-header/table-header.component';
-import { TableRowComponent } from './components/table-row/table-row.component';
-import { User } from './model/user.model';
-import { TableFilterService } from './services/table-filter.service';
 
 @Component({
-  selector: 'app-table',
-  imports: [
-    AngularSvgIconModule,
-    FormsModule,
-    TableHeaderComponent,
-    TableFooterComponent,
-    TableRowComponent,
-    TableActionComponent,
-  ],
-  templateUrl: './table.component.html',
-  styleUrl: './table.component.css',
+  selector: 'app-user',
+    imports: [AngularSvgIconModule],
+  templateUrl: './user.component.html',
+  styleUrl: './user.component.css'
 })
-export class TableComponent implements OnInit {
-  users = signal<User[]>([]);
+export class UserComponent {
+ users = signal<any>([]);
 
   constructor(private http: HttpClient, private filterService: TableFilterService) {
-    this.http.get<User[]>('https://freetestapi.com/api/v1/users?limit=8').subscribe({
+    this.http.get<any>('https://freetestapi.com/api/v1/users?limit=8').subscribe({
       next: (data) => this.users.set(data),
       error: (error) => {
         this.users.set(dummyData);
@@ -39,7 +26,7 @@ export class TableComponent implements OnInit {
 
   public toggleUsers(checked: boolean) {
     this.users.update((users) => {
-      return users.map((user) => {
+      return users.map((user:any) => {
         return { ...user, selected: checked };
       });
     });
@@ -65,13 +52,13 @@ export class TableComponent implements OnInit {
 
     return this.users()
       .filter(
-        (user) =>
+        (user:any) =>
           user.name.toLowerCase().includes(search) ||
           user.username.toLowerCase().includes(search) ||
           user.email.toLowerCase().includes(search) ||
           user.phone.includes(search),
       )
-      .filter((user) => {
+      .filter((user:any) => {
         if (!status) return true;
         switch (status) {
           case '1':
@@ -84,7 +71,7 @@ export class TableComponent implements OnInit {
             return true;
         }
       })
-      .sort((a, b) => {
+      .sort((a:any, b:any) => {
         const defaultNewest = !order || order === '1';
         if (defaultNewest) {
           return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
@@ -94,6 +81,19 @@ export class TableComponent implements OnInit {
         return 0;
       });
   });
-  
+  onSearchChange(value: Event) {
+    const input = value.target as HTMLInputElement;
+    this.filterService.searchField.set(input.value);
+  }
+
+  onStatusChange(value: Event) {
+    const selectElement = value.target as HTMLSelectElement;
+    this.filterService.statusField.set(selectElement.value);
+  }
+
+  onOrderChange(value: Event) {
+    const selectElement = value.target as HTMLSelectElement;
+    this.filterService.orderField.set(selectElement.value);
+  }
   ngOnInit() {}
 }

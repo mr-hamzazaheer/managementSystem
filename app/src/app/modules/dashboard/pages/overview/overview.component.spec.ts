@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NftComponent } from './nft.component';
+import { NftComponent } from './overview.component';
 
 describe('NftComponent', () => {
   let component: NftComponent;

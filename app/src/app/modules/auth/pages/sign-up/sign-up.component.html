@@ -112,11 +112,10 @@
       id="confirm-password"
       formControlName="confirmPassword"
       class="peer block w-full border border-gray-300 px-4 py-2 rounded-md text-sm placeholder-transparent focus:outline-none focus:ring-2 focus:ring-primary"
-      placeholder="Confirm Password"
     />
     <label
       for="confirm-password"
-      class="bg-background text-muted-foreground absolute top-2 left-3 z-10 text-sm origin-[0] -translate-y-4 scale-95 transform px-2 duration-300 peer-placeholder-shown:top-1/4 peer-placeholder-shown:left-3 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-95 peer-focus:px-2">
+      class="bg-background text-muted-foreground absolute top-2 left-3 z-10 text-sm origin-[0] -translate-y-4 scale-95 transform px-2 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:left-3 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-95 peer-focus:px-2">
       Confirm Password
     </label> 
     <div [formError]="'confirmPassword'" [formGroup]="registerForm"></div>
@@ -126,7 +125,7 @@
   <div class="flex items-center gap-2 text-sm text-muted-foreground">
     <input id="accept-term" type="checkbox" [checked]="true" />
     <label for="accept-term">I Accept the</label>
-    <app-button impact="none" tone="primary" shape="rounded" size="small">Terms</app-button>
+    <app-button impact="none" tone="primary" shape="rounded" size="small"  [loading]="IsLoader">Terms</app-button>
   </div>
 
   <!-- Submit -->

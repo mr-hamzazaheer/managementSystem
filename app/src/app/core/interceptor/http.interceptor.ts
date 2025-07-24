@@ -8,10 +8,11 @@ import {
 import { inject } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { Router, RouterLink } from '@angular/router';
 
 export const httpInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn) => {
   const token = localStorage.getItem('token');
-
+  const router = inject(Router);
   // Add JSON headers and token if available
   const clonedRequest = req.clone({
     setHeaders: {
@@ -25,8 +26,10 @@ export const httpInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
       console.error('[HTTP ERROR]', error);
 
       // Optional: handle specific status codes globally
-      if (error.status === 401) {
-        console.warn('Unauthorized access – maybe redirect to login?');
+      if (error.status === 500) {
+          router.navigate(['/errors/500']);
+      }if (error.status === 400) {
+          router.navigate(['/errors/400']);
       }
 
       return throwError(() => error);

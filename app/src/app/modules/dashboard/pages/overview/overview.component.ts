@@ -8,7 +8,7 @@ import { Nft } from '../../models/nft';
 
 @Component({
   selector: 'app-nft',
-  templateUrl: './nft.component.html',
+  templateUrl: './overview.component.html',
   imports: [
     NftHeaderComponent,
     NftDualCardComponent,

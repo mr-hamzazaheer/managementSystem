@@ -30,7 +30,9 @@ export class ButtonComponent implements OnInit {
   disabled = input(false, {
     transform: (value: boolean | string) => (typeof value === 'string' ? value === '' : value),
   });
-
+  loading = input(false, {
+    transform: (value: boolean | string) => (typeof value === 'string' ? value === '' : value),
+  });
   @Output() buttonClick = new EventEmitter<void>();
 
   public classes: string = '';
@@ -106,4 +108,5 @@ export class ButtonComponent implements OnInit {
   onButtonClick() {
     this.buttonClick.emit();
   }
+  
 }

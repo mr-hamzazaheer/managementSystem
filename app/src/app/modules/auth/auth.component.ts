@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 @Component({
@@ -9,7 +9,13 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
   imports: [AngularSvgIconModule, RouterOutlet],
 })
 export class AuthComponent implements OnInit {
-  constructor() {}
+  constructor(private _router:Router) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+    if(localStorage.getItem('token')){
+      // Redirect to dashboard if token exists
+      this._router.navigate(['/dashboard']);
+    }
+  }
 }

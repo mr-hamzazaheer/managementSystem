@@ -42,8 +42,11 @@ export class FormErrorDirective implements OnInit, OnDestroy {
 
     const control = this.control;
     const group = this.formGroup;
-
-    if (control && (control.touched || control.dirty)) {
+    if (!control) {
+      element.innerHTML = 'Form control not found.';
+      return;
+    }   
+    if (control.touched || control.dirty) {
       const errors = control.errors;
       if (errors) {
         if (errors['required']) messages.push('This field is required.');

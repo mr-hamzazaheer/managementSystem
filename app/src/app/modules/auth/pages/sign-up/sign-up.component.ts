@@ -18,6 +18,7 @@ import { FormErrorDirective } from 'src/app/shared/directives/form-error.directi
 export class SignUpComponent implements OnInit {
     registerForm!: FormGroup;
   passwordStrength = 0;
+  IsLoader = false;
  getError = getError;
   constructor(private fb: FormBuilder,private readonly _router: Router, private _authService:AuthService,private _toastr: ToastrService) {}
 
@@ -64,7 +65,7 @@ export class SignUpComponent implements OnInit {
   }
 
   Register(): void {
-    debugger
+    this.IsLoader = true;
     this.registerForm.markAllAsTouched();
     if (this.registerForm.invalid) {
       return;
@@ -80,10 +81,11 @@ export class SignUpComponent implements OnInit {
               } else {
               this._toastr.warning( 'warning');
               } 
+              this.IsLoader = false;
             },
             error: (error) => {
               this._toastr.error( 'error');
-
+              this.IsLoader= false;
               // TODO: Display user-friendly error message (e.g., incorrect credentials)
              // this.errorMessage = 'Invalid email or password.';
             }

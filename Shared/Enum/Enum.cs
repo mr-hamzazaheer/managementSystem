@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
 
 namespace Shared.Enums;
@@ -90,6 +91,9 @@ public enum ActivityAction
     TokenRefreshed = 51,
 
     [Display(Name = "Register")]
-    Register = 51
+    Register = 51,
+
+    [Display(Name = "ConformEmail")]
+    ConformEmail = 52
 }
 

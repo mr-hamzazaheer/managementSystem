@@ -17,7 +17,7 @@ export class SignInComponent implements OnInit {
   form!: FormGroup;
   submitted = false;
   passwordTextType!: boolean;
-
+  IsLoader = false
   constructor(private readonly _formBuilder: FormBuilder, private readonly _router: Router,
     private _authService:AuthService,private _toastr: ToastrService) {}
 
@@ -44,7 +44,7 @@ export class SignInComponent implements OnInit {
     debugger
     this.submitted = true;
     const { email, password } = this.form.value;
-
+    this.IsLoader = true;
     if (this.form.invalid) {
       return;
     }else{
@@ -60,7 +60,15 @@ export class SignInComponent implements OnInit {
                 }else{
                   this._toastr.error( message);
                 }
-              }
+                
+                this.IsLoader = false;
+              },
+            error: (error) => {
+              this._toastr.error( 'error');
+              this.IsLoader= false;
+              // TODO: Display user-friendly error message (e.g., incorrect credentials)
+             // this.errorMessage = 'Invalid email or password.';
+            }
           });
     }
   }

@@ -143,6 +143,13 @@ public class AuthService : IAuthService
             return _response;
         }
         _response.Message = Message.Success;
+        await _unitOfWork._activityLog.LogAsync(
+                action: ActivityAction.ConformEmail,
+                entityName: typeof(User).Name,
+                entityId: user.Id,
+                requestData: user,
+                responseData: result
+            );
         return _response;   
     }
 }
