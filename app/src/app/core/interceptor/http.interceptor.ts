@@ -23,6 +23,7 @@ export const httpInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
 
   return next(clonedRequest).pipe(
     catchError((error: HttpErrorResponse) => {
+      debugger
       console.error('[HTTP ERROR]', error);
 
       // Optional: handle specific status codes globally
@@ -31,7 +32,7 @@ export const httpInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
       }if (error.status === 400) {
           router.navigate(['/errors/400']);
       }
-
+      debugger
       return throwError(() => error);
     })
   );

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Services.Logger.ILogger;
 using Services.Service.IService;
 using Services.UnitOfWork.IUnitOfWork;
@@ -27,8 +28,9 @@ namespace Services.Service;
             _response = new(); _jwt = options.Value;
         }
 
-        public async Task<Response> GetAll()
+        public async Task<Response> GetAll(string filter)
         {
+            var filterModel = JsonConvert.DeserializeObject<SearchFilter>(filter);
             return _response = await _unitOfWork._userRepository.GetAll();
         }
     }

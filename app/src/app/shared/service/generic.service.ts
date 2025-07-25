@@ -20,10 +20,15 @@ export class HttpService {
   }
 
   get<T>(endpoint: string, params?: Record<string, unknown>): Observable<T> {
+  try {
     return this.http.get<T>(`${this.baseUrl}/${endpoint}`, {
-      params: this.toParams(params),
+      params: this.toParams(params)
     });
+  } catch (error) {
+    console.error('Error in GET request:', error);
+    throw error;
   }
+}
 
   post<T>(endpoint: string, body: unknown): Observable<T> {
     return this.http.post<T>(`${this.baseUrl}/${endpoint}`, body);

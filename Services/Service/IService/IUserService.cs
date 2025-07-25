@@ -9,6 +9,6 @@ namespace Services.Service.IService
 {
     public interface IUserService
     {
-        Task<Response> GetAll();
+        Task<Response> GetAll(string filter);
     }
 }

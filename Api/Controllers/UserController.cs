@@ -18,9 +18,9 @@ public class UserController : ControllerBase
     {
         _userManager = userManager;
         _unitOfWork = unitOfWork; _userService = userService;
-    }
+    } 
 
     [HttpGet("get-all")]
-    public async Task<Response> GetAll() =>
-       await _userService.GetAll();
+    public async Task<Response> GetAll([FromQuery] string filter) =>
+       await _userService.GetAll(filter);
 }

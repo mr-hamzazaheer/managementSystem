@@ -1,1 +1,10 @@
-<p>activity-log works!</p>
+<app-table
+  [columns]="[
+    { key: 'firstName', label: 'FirstName', sortable: true },
+    { key: 'lastName', label: 'LastName', sortable: true },
+    { key: 'address', label: 'Address', sortable: true },
+    { key: 'contactNumber', label: 'ContactNumber', sortable: true },
+    { key: 'email', label: 'Email' }
+     ]"
+  [fetchData]="loadUsers">
+</app-table>
